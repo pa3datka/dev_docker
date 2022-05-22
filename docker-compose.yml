@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+    php7.4-fpm:
+      restart: on-failure
+      build:
+        context: ./
+        dockerfile: services/php7.4-fpm/php7.4-fpm.Dockerfile
+      volumes:
+        - /shared:/shared
+      networks:
+        - vagrant-docker
+
+    php8.1-fpm:
+      restart: on-failure
+      build:
+        context: ./
+        dockerfile: services/php8.1-fpm/php8.1-fpm.Dockerfile
+      volumes:
+        - /shared:/shared
+      networks:
+        - vagrant-docker
+
+    nginx:
+      #    restart: on-failure
+      build:
+        context: services/nginx/
+        dockerfile: nginx.Dockerfile
+      volumes:
+        - /shared:/shared
+        - ./services/nginx/conf.d:/etc/nginx/templates
+        - ./services/nginx/ssl:/etc/nginx/ssl
+      ports:
+        - "80:80"
+        - "443:443"
+      environment:
+        - PROJECT_PATH_TEST=${PROJECT_PATH_TEST}
+      networks:
+        - vagrant-docker
+
+    mysql:
+      build:
+        context: services/mysql/
+        dockerfile: mysql.Dockerfile
+      restart: on-failure
+      #    security_opt:
+      #      - seccomp:unconfined
+      environment:
+        MYSQL_ROOT_PASSWORD: "root"
+      ports:
+        - "3306:3306"
+      user: "${DOCKER_UID}:${DOCKER_GID}"
+      volumes:
+        - /shared/db/mysql:/var/lib/mysql:rw
+      networks:
+        - vagrant-docker
+
+    memcached:
+      restart: on-failure
+      image: memcached:latest
+      networks:
+        - vagrant-docker
+
+    node16:
+      restart: on-failure
+      image: node:16
+      tty: true
+      volumes:
+        - /shared:/shared
+
+networks:
+  vagrant-docker:
+    driver: bridge
+    name: "vagrant-docker"
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

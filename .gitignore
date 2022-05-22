@@ -1,0 +1,4 @@
+.idea
+.env
+/ssh/owner.id_rsa
+/ssh/vcs.id_rsa
