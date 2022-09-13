@@ -35,6 +35,11 @@ services:
         - "443:443"
       environment:
         - PROJECT_PATH_TEST=${PROJECT_PATH_TEST}
+        - PROJECT_PATH_TEST81=${PROJECT_PATH_TEST81}
+        - PROJECT_PATH_CARRENTAL=${PROJECT_PATH_CARRENTAL}
+        - PROJECT_PATH_FERICO=${PROJECT_PATH_FERICO}
+        - PROJECT_PATH_TESTING_MANAGER=${PROJECT_PATH_TESTING_MANAGER}
+        - PROJECT_PATH_MOIKA=${PROJECT_PATH_MOIKA}
       networks:
         - vagrant-docker
 
@@ -52,6 +57,7 @@ services:
       user: "${DOCKER_UID}:${DOCKER_GID}"
       volumes:
         - /shared/db/mysql:/var/lib/mysql:rw
+        - /shared:/shared
       networks:
         - vagrant-docker
 
@@ -61,12 +67,12 @@ services:
       networks:
         - vagrant-docker
 
-    node16:
-      restart: on-failure
-      image: node:16
-      tty: true
-      volumes:
-        - /shared:/shared
+#    node16:
+#      restart: on-failure
+#      image: node:16
+#      tty: true
+#      volumes:
+#        - /shared:/shared
 
 networks:
   vagrant-docker:
