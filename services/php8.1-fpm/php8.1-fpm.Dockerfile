@@ -1,9 +1,9 @@
 FROM php:8.1-fpm
 RUN apt-get update && apt-get install -y ssh
-COPY services/php7.4-fpm/configs/php.ini "$PHP_INI_DIR/php.ini"
-COPY services/php7.4-fpm/configs/php-fpm.conf "/usr/local/etc/php-fpm.conf"
+COPY services/php8.1-fpm/configs/php.ini "$PHP_INI_DIR/php.ini"
+COPY services/php8.1-fpm/configs/php-fpm.conf "/usr/local/etc/php-fpm.conf"
 COPY ssh/ssh.config "/root/.ssh/config"
-COPY ssh/vcs.id_rsa "/root/.ssh/vcs.id_rsa"
+COPY ssh/owner.id_rsa "/root/.ssh/vcs.id_rsa"
 RUN chmod 600 /root/.ssh/vcs.id_rsa
 RUN chmod 600 /root/.ssh/config
 RUN ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
